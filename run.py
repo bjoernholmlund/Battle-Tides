@@ -1,7 +1,7 @@
 import random
 
 def print_welcome_message():
-    player_name = input("Enter your name to start: ")
+    player_name = input("Enter your name to start:\n ")
     print(f"""
 
     ***********************************************
@@ -126,7 +126,7 @@ def ask_play_again():
     Accepts 'y' or 'n' as responses. If the answer is invalid, the prompt repeats.
     """
     while True:
-        replay = input("Do you want to play again? (y/n): ").lower()
+        replay = input("Do you want to play again? (y/n):\n ").lower()
         if replay == 'y':
             return True
         elif replay == 'n':
