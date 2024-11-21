@@ -61,13 +61,22 @@ def create_board(size):
     return [["~"] * size for _ in range(size)]
 
 def print_board(board, hide_ships=False):
-    """Skriver ut spelplanen på ett användarvänligt sätt med bokstäver."""
-    letters = "ABCDEFGH"
-    print("  " + " ".join(letters))
+    """
+    Skriver ut spelplanen på ett användarvänligt sätt med tydliga gränser, bokstäver och nummer.
+    """
+    letters = "ABCDEFGH"  # Kolumnbokstäver
+    print("    " + "   ".join(letters))  # Kolumnrubriker
+    print("  +---+---+---+---+---+---+---+---+")  # Översta gräns
     for index, row in enumerate(board):
-        if hide_ships:
-            row = ['~' if cell == 'S' else cell for cell in row]
-        print(f"{index} " + " ".join(row))
+        row_display = f"{index} | "  # Radnummer
+        for cell in row:
+            # Om vi ska dölja skeppen, visa bara "~" för tomma områden
+            if hide_ships and cell == "S":
+                row_display += "~   "
+            else:
+                row_display += f"{cell}   "  # Träff eller miss
+        print(row_display + "|")  # Radutskrift
+        print("  +---+---+---+---+---+---+---+---+")  # Gräns för varje rad
     print("\n")
 
 def place_ship(board, ship_size):
