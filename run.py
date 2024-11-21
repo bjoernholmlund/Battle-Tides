@@ -40,7 +40,7 @@ def print_welcome_message():
     
     Let the battle begin...!
     """
-    print(welcome_message)
+    print(welcome_message.format(player_name=player_name))
 
     while True:
         ready_to_play = input("Are you ready to play? (y/n): ").lower()
