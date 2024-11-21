@@ -53,6 +53,7 @@ def print_welcome_message():
         else:
             print("Invalid input. Please answer with 'y' for yes or 'n' for no.")
 
+
 def create_board(size):
     """
     Skapar en tom spelplan med givna dimensioner.
