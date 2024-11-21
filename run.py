@@ -30,7 +30,7 @@ def print_welcome_message():
     |  _ \ / _` | __| __| |/ _ \   | | | |/ _` |/ _ \/ __|
     | |_) | (_| | |_| |_| |  __/   | | | | (_| |  __/\__ \
     |____/ \__,_|\__|\__|_|\___|   |_| |_|\__,_|\___||___/
-    
+
     You will be playing against the computer.
     Try to sink all their ships before they sink yours!
     
@@ -40,7 +40,7 @@ def print_welcome_message():
     
     Let the battle begin...!
     """
-    print(welcome_message.format(player_name=player_name))
+    print(welcome_message)
 
     while True:
         ready_to_play = input("Are you ready to play? (y/n): ").lower()
@@ -145,6 +145,7 @@ def play_game():
     while player_shots_left > 0:
         clear_screen()
 
+        # Print updated boards
         print("Your board:")
         print_board(player_board)
 
@@ -154,9 +155,8 @@ def play_game():
         print(f"\nShots remaining: {player_shots_left}")
         print(f"Your score: {player_score} | Computer's score: {computer_score}")
 
+        # Get player's shot
         row, col = get_player_shot()
-
-        # Player's turn
         if shoot(computer_board, row, col):
             print("HIT!")
             hidden_computer_board[row][col] = "X"
@@ -165,10 +165,12 @@ def play_game():
             print("Miss!")
             hidden_computer_board[row][col] = "O"
 
+        # Pause for 1 second to show hit/miss message
         time.sleep(1)
 
         # Check if all computer's ships are sunk
         if all(cell != "S" for row in computer_board for cell in row):
+            clear_screen()
             print("Congratulations, you've sunk all the computer's ships!")
             break
 
@@ -183,15 +185,18 @@ def play_game():
         else:
             print(f"The computer missed at ({comp_row + 1}, {comp_col + 1})!")
 
+        # Pause for 1 second for computer's action
         time.sleep(1)
 
         # Check if all player's ships are sunk
         if all(cell != "S" for row in player_board for cell in row):
+            clear_screen()
             print("Sorry, the computer has sunk all your ships!")
             break
 
         player_shots_left -= 1
 
+    clear_screen()
     print(f"Game over! Your score: {player_score}, Computer's score: {computer_score}")
 
 # Start the game
