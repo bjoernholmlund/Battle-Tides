@@ -3,9 +3,15 @@ import time
 import random
 
 # Kartstorlek och skeppsstorlekar
-board_size = 6  # Smaller board
-ships = [2, 2, 1, 1]  # Smaller ships to fit the 6x6 board
-max_shots = 15  # Adjust the number of shots for the smaller board
+board_size = 6  # Mindre spelplan (6x6)
+ships = [3, 3, 2, 2, 1, 1]  # Skeppsstorlekar
+max_shots = 20
+
+def clear_screen():
+    """
+    Clears the screen for better user experience.
+    """
+    os.system("cls" if os.name == "nt" else "clear")
 
 def print_welcome_message():
     """
@@ -40,6 +46,7 @@ def print_welcome_message():
         ready_to_play = input("Are you ready to play? (y/n): ").lower()
         if ready_to_play == 'y':
             print("Great! Let's start the game!")
+            time.sleep(2)
             return True
         elif ready_to_play == 'n':
             print("Okay, come back when you're ready!")
@@ -57,19 +64,19 @@ def print_board(board, hide_ships=False):
     """
     Skriver ut spelplanen på ett användarvänligt sätt med tydliga gränser, bokstäver och nummer.
     """
-    letters = "ABCDEF"  # Adjusted column letters for smaller board
-    print("    " + "   ".join(letters))  # Column headers
-    print("  +---+---+---+---+---+---+")  # Top border
+    letters = "ABCDEF"  # Kolumnbokstäver för en mindre spelplan (6x6)
+    print("    " + "   ".join(letters))  # Kolumnrubriker
+    print("  +---+---+---+---+---+---+")  # Översta gräns
     for index, row in enumerate(board):
-        row_display = f"{index} | "  # Row number
+        row_display = f"{index} | "  # Radnummer
         for cell in row:
-            # If hiding ships, show "~" for empty spots
+            # Om vi ska dölja skeppen, visa bara "~" för tomma områden
             if hide_ships and cell == "S":
                 row_display += "~   "
             else:
-                row_display += f"{cell}   "  # Hit or miss
-        print(row_display + "|")  # Print row
-        print("  +---+---+---+---+---+---+")  # Border for each row
+                row_display += f"{cell}   "  # Träff eller miss
+        print(row_display + "|")  # Radutskrift
+        print("  +---+---+---+---+---+---+")  # Gräns för varje rad
     print("\n")
 
 def place_ship(board, ship_size):
@@ -99,8 +106,7 @@ def shoot(board, row, col):
     Utför ett skott och returnerar om det är en träff.
     """
     if board[row][col] in ["X", "O"]:
-        print("Du har redan skjutit här!")
-        return None
+        return None  # Om du redan har skjutit här så gör ingenting
     if board[row][col] == "S":
         board[row][col] = "X"
         return True
@@ -110,16 +116,16 @@ def shoot(board, row, col):
 
 def get_player_shot():
     """Frågar efter spelarens skott och säkerställer giltig inmatning med bokstäver."""
-    letters = "ABCDEF"  # Adjusted to the new size
+    letters = "ABCDEF"  # För en 6x6 bräda
     while True:
         try:
-            col = input("Välj en kolumn (A-F): ").upper()  # Update for smaller columns
+            col = input("Välj en kolumn (A-F): ").upper()
             if col not in letters:
                 print("Ogiltig kolumn. Vänligen välj mellan A-F.")
                 continue
             col_index = letters.index(col)
-            row = int(input("Välj en rad (0-5): "))  # Adjust row limit
-            if 0 <= row < 6:  # Adjust row range
+            row = int(input("Välj en rad (0-5): "))  # Anpassat för 6 rader
+            if 0 <= row < 6:
                 return row, col_index
             else:
                 print("Ogiltig rad. Vänligen välj mellan 0-5.")
@@ -142,12 +148,15 @@ def play_game():
         place_ship(player_board, ship_size)
         place_ship(computer_board, ship_size)
 
-    print("Ditt bräde:")
-    print_board(player_board)
-    print("Datorns bräde:")
-    print_board(hidden_computer_board, hide_ships=True)
-
     while player_shots_left > 0:
+        clear_screen()
+
+        print("Ditt bräde:")
+        print_board(player_board)
+
+        print("Datorns bräde:")
+        print_board(hidden_computer_board, hide_ships=True)
+
         print(f"Skott kvar: {player_shots_left}")
         print(f"Din poäng: {player_score} | Datorns poäng: {computer_score}")
 
@@ -162,21 +171,27 @@ def play_game():
             print("Miss!")
             hidden_computer_board[row][col] = "O"
 
+        # Vänta 1 sekund innan skärmen uppdateras
+        time.sleep(1.5)
+
         # Kontrollera om alla datorns skepp är sänkta
         if all(cell != "S" for row in computer_board for cell in row):
             print("Grattis, du har sänkt alla datorns skepp!")
             break
 
         # Datorns tur
-        comp_row, comp_col = random.randint(0, 5), random.randint(0, 5)  # Adjusted to new board size
+        comp_row, comp_col = random.randint(0, 5), random.randint(0, 5)  # Anpassat för 6x6
         while player_board[comp_row][comp_col] in ["X", "O"]:
-            comp_row, comp_col = random.randint(0, 5), random.randint(0, 5)
+            comp_row, comp_col = random.randint(0, 5), random.randint(0, 5)  # Anpassat för 6x6
 
         if shoot(player_board, comp_row, comp_col):
             print(f"Datorn träffade på ({comp_row}, {comp_col})!")
             computer_score += 10
         else:
             print(f"Datorn missade på ({comp_row}, {comp_col})!")
+
+        # Vänta 1 sekund innan skärmen uppdateras
+        time.sleep(1)
 
         # Kontrollera om alla spelarens skepp är sänkta
         if all(cell != "S" for row in player_board for cell in row):
