@@ -145,11 +145,8 @@ def play_game():
     while player_shots_left > 0:
         clear_screen()
 
-        # Print updated boards
-        print("Your board:")
-        print_board(player_board)
-
-        print("\nComputer's board:")
+        # Print only the computer's board
+        print("Computer's board:")
         print_board(hidden_computer_board, hide_ships=True)
 
         print(f"\nShots remaining: {player_shots_left}")
