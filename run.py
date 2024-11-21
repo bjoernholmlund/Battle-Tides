@@ -1,31 +1,36 @@
 import random
 
 def print_welcome_message():
-    player_name = input("Enter your name to start:\n ")
-    print(f"""
+    """
+    Prints a welcome message to the player, including their name.
+    """
 
+    player_name = input("Enter your name to start: ")
+
+    # Use a multi-line raw string for better formatting
+    welcome_message = r"""
     ***********************************************
     *     Welcome {player_name} to BATTLE TIDES!  *
     *     Prepare for battle!                     *
     ***********************************************
-        
- ____        _   _   _        _____ _     _           
-| __ )  __ _| |_| |_| | ___  |_   _(_) __| | ___  ___ 
-|  _ \ / _` | __| __| |/ _ \   | | | |/ _` |/ _ \/ __|
-| |_) | (_| | |_| |_| |  __/   | | | | (_| |  __/\__ \
-|____/ \__,_|\__|\__|_|\___|   |_| |_|\__,_|\___||___/
-          
+    
+    ____        _   _   _        _____ _     _           
+    | __ )  __ _| |_| |_| | ___  |_   _(_) __| | ___  ___ 
+    |  _ \ / _` | __| __| |/ _ \   | | | |/ _` |/ _ \/ __|
+    | |_) | (_| | |_| |_| |  __/   | | | | (_| |  __/\__ \
+    |____/ \__,_|\__|\__|_|\___|   |_| |_|\__,_|\___||___/
+
     You will be playing against the computer.
     Try to sink all their ships before they sink yours!
     
     Game rules:
     - Take turns shooting at each other's ships.
     - The first to sink all ships wins!
-
+    
     Let the battle begin...!
-          
-          """)
+    """
 
+    print(welcome_message.format(player_name=player_name))
 # Global variables
 board_size = 8  # Size of the game board (8x8)
 player_board = []  # Player's board
