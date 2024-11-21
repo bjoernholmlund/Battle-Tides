@@ -31,15 +31,15 @@ def print_welcome_message():
 
     print(welcome_message.format(player_name=player_name))
 
-        # Ask the player if they are ready to play
+    # Ask the player if they are ready to play
     while True:
         ready_to_play = input("Are you ready to play? (y/n): ").lower()
         if ready_to_play == 'y':
             print("Great! Let's start the game!")
-            break
+            return True  # Return True to indicate that the player is ready
         elif ready_to_play == 'n':
             print("Okay, come back when you're ready!")
-            return  # Exit the function, game won't start
+            return False  # Return False to stop the game from starting
         else:
             print("Invalid input. Please answer with 'y' for yes or 'n' for no.")
 
@@ -51,8 +51,8 @@ hidden_computer_board = []  # Computer's board with only hits/misses visible to 
 player_score = 0  # Player's score
 computer_score = 0  # Computer's score
 ships = [3, 3, 2, 2, 1, 1]  # Ship sizes (2 large, 2 medium, 2 small)
-max_shots = 30  # Maximum number of shots
-player_shots_left = max_shots  # Tracks remaining shots for the player
+max_shots = 20  # Maximum shots allowed for the player
+player_shots_left = max_shots  # Shots left for the player
 
 def create_board(size):
     """
@@ -160,6 +160,10 @@ def play_game():
     """
     global player_score, computer_score, player_board, computer_board, hidden_computer_board, player_shots_left
     while True:
+        if player_shots_left <= 0:
+            print("You're out of shots! Game over!")
+            break
+        
         # Display the player's board and the computer's board with hits/misses
         print("Player's board:")
         print_board(player_board)
@@ -167,14 +171,8 @@ def play_game():
         print("Computer's board with hits/misses:")
         print_board(hidden_computer_board, hide_ships=True)
 
-        if player_shots_left == 0:
-            print("You're out of shots! Game over.")
-            break
-
         # Ask for the player's shot and check the result
-        print(f"Shots remaining: {player_shots_left}")
         row, col = get_player_shot()
-        player_shots_left -= 1  # Decrease shots left after each shot
 
         if shoot(computer_board, row, col):
             print("HIT!")
@@ -182,7 +180,9 @@ def play_game():
             player_score += 10
         else:
             print("Miss!")
-            hidden_computer_board[row][col] = "O"    
+            hidden_computer_board[row][col] = "O"
+
+        player_shots_left -= 1  # Decrease the shots left
 
         # Check if the player has sunk all of the computer's ships
         if all(cell != "S" for row in computer_board for cell in row):
@@ -201,44 +201,38 @@ def play_game():
 
         # Check if the computer has sunk all of the player's ships
         if all(cell != "S" for row in player_board for cell in row):
-            print("The computer has sunk all of your ships! You lost.")
+            print("Sorry, the computer has sunk all your ships!")
+            computer_score += 50
             break
 
-    # Display the final scores and ask if the player wants to play again
-    print(f"\nFinal Scores:\nPlayer: {player_score}\nComputer: {computer_score}")
+    print(f"Game Over! Your score: {player_score}, Computer's score: {computer_score}")
     if ask_play_again():
-        # Reset game state for a new round
+        # Reset the game state and play again
         player_board = create_board(board_size)
         computer_board = create_board(board_size)
         hidden_computer_board = create_board(board_size)
-        player_shots_left = max_shots
-        player_score = 0
-        computer_score = 0
-
-        # Place ships on the boards
+        player_shots_left = max_shots  # Reset shots left
         for ship_size in ships:
             place_ship(player_board, ship_size)
             place_ship(computer_board, ship_size)
-
-        play_game()  # Restart the game
+            play_game()  # Restart the game
 
 # Main script to initialize the game
-print_welcome_message()
-player_board = create_board(board_size)
-computer_board = create_board(board_size)
-hidden_computer_board = create_board(board_size)
+if print_welcome_message():  # Only start the game if the player is ready
+    # Initialize boards, ships, and other variables
+    player_board = create_board(board_size)
+    computer_board = create_board(board_size)
+    hidden_computer_board = create_board(board_size)
 
-# Place ships on the boards
-for ship_size in ships:
-    place_ship(player_board, ship_size)
-    place_ship(computer_board, ship_size)
+    # Place ships on the boards
+    for ship_size in ships:
+        place_ship(player_board, ship_size)
+        place_ship(computer_board, ship_size)
 
-print("Player's board with ships:")
-print_board(player_board, hide_ships=True)
-
-# Start the game
-play_game()
-
+    # Now start the game
+    play_game()
+else:
+    print("The game was not started.")
      
 
 
