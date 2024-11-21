@@ -172,7 +172,11 @@ def play_game():
             hidden_computer_board[row][col] = "O"
 
         # Vänta 1 sekund innan skärmen uppdateras
-        time.sleep(1.5)
+        time.sleep(1)
+
+        # Uppdatera endast den specifika positionen på brädet
+        print("Uppdaterad spelplan efter ditt skott:")
+        print_board(hidden_computer_board, hide_ships=True)
 
         # Kontrollera om alla datorns skepp är sänkta
         if all(cell != "S" for row in computer_board for cell in row):
@@ -192,6 +196,10 @@ def play_game():
 
         # Vänta 1 sekund innan skärmen uppdateras
         time.sleep(1)
+
+        # Uppdatera endast den specifika positionen på brädet
+        print("Uppdaterad spelplan efter datorns skott:")
+        print_board(player_board)
 
         # Kontrollera om alla spelarens skepp är sänkta
         if all(cell != "S" for row in player_board for cell in row):
