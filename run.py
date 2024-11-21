@@ -18,6 +18,8 @@ def print_welcome_message():
     Prints a welcome message to the player, including their name.
     """
     player_name = input("Enter your name to start: ")
+    # Clear the screen after getting the player's name
+    clear_screen()
 
     welcome_message = r"""
     ***********************************************
