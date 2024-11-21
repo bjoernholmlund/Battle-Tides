@@ -9,7 +9,7 @@ def print_welcome_message():
     # Use a multi-line raw string for better formatting
     welcome_message = r"""
     ***********************************************
-    *     Welcome {player_name} to BATTLE TIDES!  *
+    *     Welcome {player_name} to BATTLE TIDES!          *
     *     Prepare for battle!                     *
     ***********************************************
     
@@ -30,6 +30,18 @@ def print_welcome_message():
     """
 
     print(welcome_message.format(player_name=player_name))
+
+        # Ask the player if they are ready to play
+    while True:
+        ready_to_play = input("Are you ready to play? (y/n): ").lower()
+        if ready_to_play == 'y':
+            print("Great! Let's start the game!")
+            break
+        elif ready_to_play == 'n':
+            print("Okay, come back when you're ready!")
+            return  # Exit the function, game won't start
+        else:
+            print("Invalid input. Please answer with 'y' for yes or 'n' for no.")
 
 # Global variables
 board_size = 8  # Size of the game board (8x8)
