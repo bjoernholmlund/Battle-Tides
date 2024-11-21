@@ -3,15 +3,9 @@ import time
 import random
 
 # Kartstorlek och skeppsstorlekar
-board_size = 8
-ships = [3, 3, 2, 2, 1, 1]
-max_shots = 20
-
-def clear_screen():
-    """
-    Clears the screen for better user experience.
-    """
-    os.system("cls" if os.name == "nt" else "clear")
+board_size = 6  # Smaller board
+ships = [2, 2, 1, 1]  # Smaller ships to fit the 6x6 board
+max_shots = 15  # Adjust the number of shots for the smaller board
 
 def print_welcome_message():
     """
@@ -53,7 +47,6 @@ def print_welcome_message():
         else:
             print("Invalid input. Please answer with 'y' for yes or 'n' for no.")
 
-
 def create_board(size):
     """
     Skapar en tom spelplan med givna dimensioner.
@@ -64,19 +57,19 @@ def print_board(board, hide_ships=False):
     """
     Skriver ut spelplanen på ett användarvänligt sätt med tydliga gränser, bokstäver och nummer.
     """
-    letters = "ABCDEFGH"  # Kolumnbokstäver
-    print("    " + "   ".join(letters))  # Kolumnrubriker
-    print("  +---+---+---+---+---+---+---+---+")  # Översta gräns
+    letters = "ABCDEF"  # Adjusted column letters for smaller board
+    print("    " + "   ".join(letters))  # Column headers
+    print("  +---+---+---+---+---+---+")  # Top border
     for index, row in enumerate(board):
-        row_display = f"{index} | "  # Radnummer
+        row_display = f"{index} | "  # Row number
         for cell in row:
-            # Om vi ska dölja skeppen, visa bara "~" för tomma områden
+            # If hiding ships, show "~" for empty spots
             if hide_ships and cell == "S":
                 row_display += "~   "
             else:
-                row_display += f"{cell}   "  # Träff eller miss
-        print(row_display + "|")  # Radutskrift
-        print("  +---+---+---+---+---+---+---+---+")  # Gräns för varje rad
+                row_display += f"{cell}   "  # Hit or miss
+        print(row_display + "|")  # Print row
+        print("  +---+---+---+---+---+---+")  # Border for each row
     print("\n")
 
 def place_ship(board, ship_size):
@@ -117,19 +110,19 @@ def shoot(board, row, col):
 
 def get_player_shot():
     """Frågar efter spelarens skott och säkerställer giltig inmatning med bokstäver."""
-    letters = "ABCDEFGH"
+    letters = "ABCDEF"  # Adjusted to the new size
     while True:
         try:
-            col = input("Välj en kolumn (A-H): ").upper()
+            col = input("Välj en kolumn (A-F): ").upper()  # Update for smaller columns
             if col not in letters:
-                print("Ogiltig kolumn. Vänligen välj mellan A-H.")
+                print("Ogiltig kolumn. Vänligen välj mellan A-F.")
                 continue
             col_index = letters.index(col)
-            row = int(input("Välj en rad (0-7): "))
-            if 0 <= row < 8:
+            row = int(input("Välj en rad (0-5): "))  # Adjust row limit
+            if 0 <= row < 6:  # Adjust row range
                 return row, col_index
             else:
-                print("Ogiltig rad. Vänligen välj mellan 0-7.")
+                print("Ogiltig rad. Vänligen välj mellan 0-5.")
         except ValueError:
             print("Ogiltig inmatning, försök igen.")
 
@@ -149,15 +142,12 @@ def play_game():
         place_ship(player_board, ship_size)
         place_ship(computer_board, ship_size)
 
+    print("Ditt bräde:")
+    print_board(player_board)
+    print("Datorns bräde:")
+    print_board(hidden_computer_board, hide_ships=True)
+
     while player_shots_left > 0:
-        clear_screen()
-
-        print("Ditt bräde:")
-        print_board(player_board)
-
-        print("Datorns bräde:")
-        print_board(hidden_computer_board, hide_ships=True)
-
         print(f"Skott kvar: {player_shots_left}")
         print(f"Din poäng: {player_score} | Datorns poäng: {computer_score}")
 
@@ -178,9 +168,9 @@ def play_game():
             break
 
         # Datorns tur
-        comp_row, comp_col = random.randint(0, 7), random.randint(0, 7)
+        comp_row, comp_col = random.randint(0, 5), random.randint(0, 5)  # Adjusted to new board size
         while player_board[comp_row][comp_col] in ["X", "O"]:
-            comp_row, comp_col = random.randint(0, 7), random.randint(0, 7)
+            comp_row, comp_col = random.randint(0, 5), random.randint(0, 5)
 
         if shoot(player_board, comp_row, comp_col):
             print(f"Datorn träffade på ({comp_row}, {comp_col})!")
