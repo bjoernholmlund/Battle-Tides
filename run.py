@@ -1,4 +1,17 @@
+import os
+import time
 import random
+
+# Kartstorlek och skeppsstorlekar
+board_size = 8
+ships = [3, 3, 2, 2, 1, 1]
+max_shots = 20
+
+def clear_screen():
+    """
+    Clears the screen for better user experience.
+    """
+    os.system("cls" if os.name == "nt" else "clear")
 
 def print_welcome_message():
     """
@@ -6,14 +19,13 @@ def print_welcome_message():
     """
     player_name = input("Enter your name to start: ")
 
-    # Use a multi-line raw string for better formatting
     welcome_message = r"""
     ***********************************************
-    *     Welcome {player_name} to BATTLE TIDES!          *
-    *     Prepare for battle!                     *
+        Welcome {player_name} to BATTLE TIDES!         
+        Prepare for battle!                     
     ***********************************************
-    
-    ____        _   _   _        _____ _     _           
+
+     ____        _   _   _        _____ _     _           
     | __ )  __ _| |_| |_| | ___  |_   _(_) __| | ___  ___ 
     |  _ \ / _` | __| __| |/ _ \   | | | |/ _` |/ _ \/ __|
     | |_) | (_| | |_| |_| |  __/   | | | | (_| |  __/\__ \
@@ -28,438 +40,153 @@ def print_welcome_message():
     
     Let the battle begin...!
     """
-
     print(welcome_message.format(player_name=player_name))
 
-    # Ask the player if they are ready to play
     while True:
         ready_to_play = input("Are you ready to play? (y/n): ").lower()
         if ready_to_play == 'y':
             print("Great! Let's start the game!")
-            return True  # Return True to indicate that the player is ready
+            return True
         elif ready_to_play == 'n':
             print("Okay, come back when you're ready!")
-            return False  # Return False to stop the game from starting
+            return False
         else:
             print("Invalid input. Please answer with 'y' for yes or 'n' for no.")
 
-# Global variables
-board_size = 8  # Size of the game board (8x8)
-player_board = []  # Player's board
-computer_board = []  # Computer's board
-hidden_computer_board = []  # Computer's board with only hits/misses visible to the player
-player_score = 0  # Player's score
-computer_score = 0  # Computer's score
-ships = [3, 3, 2, 2, 1, 1]  # Ship sizes (2 large, 2 medium, 2 small)
-max_shots = 20  # Maximum shots allowed for the player
-player_shots_left = max_shots  # Shots left for the player
-
 def create_board(size):
     """
-    Creates a game board of the given size (size is defined by 'size').
-    Fills the board with "~", which means an empty space.
+    Skapar en tom spelplan med givna dimensioner.
     """
-    return [["~"] * size for _ in range(size)]  # Creates a list of lists, each cell filled with "~"
+    return [["~"] * size for _ in range(size)]
 
 def print_board(board, hide_ships=False):
-    """
-    Prints the board in a user-friendly way.
-    Displays row and column numbers to make it easier to target shots.
-    If 'hide_ships' is True, the ships on the board will not be shown.
-    """
-    print("  " + " ".join(str(i) for i in range(len(board[0]))))  # Print column numbers
-    for index, row in enumerate(board):  # Loop through each row and print it
+    """Skriver ut spelplanen på ett användarvänligt sätt med bokstäver."""
+    letters = "ABCDEFGH"
+    print("  " + " ".join(letters))
+    for index, row in enumerate(board):
         if hide_ships:
-            row = ['~' if cell == 'S' else cell for cell in row]  # Hide ships for the player
-        print(f"{index} " + " ".join(row))  # Print row number and its content
+            row = ['~' if cell == 'S' else cell for cell in row]
+        print(f"{index} " + " ".join(row))
     print("\n")
 
 def place_ship(board, ship_size):
     """
-    Places a ship on the game board. The ship is placed either horizontally or vertically.
-    For each placement, it checks that there is enough space for the ship.
+    Placerar ett skepp på brädet i slumpmässig riktning.
     """
-    placed = False  # Variable to check if the ship has been placed
+    placed = False
     while not placed:
-        # Randomly choose the orientation (horizontal or vertical)
         orientation = random.choice(["horizontal", "vertical"])
-        
         if orientation == "horizontal":
-            # Randomly select a row and column where the ship will be placed
             row = random.randint(0, len(board) - 1)
             col = random.randint(0, len(board[0]) - ship_size)
-
-            # Check if all cells are empty (~)
             if all(board[row][col + i] == "~" for i in range(ship_size)):
                 for i in range(ship_size):
-                    board[row][col + i] = "S"  # Place the ship ("S" stands for ship)
+                    board[row][col + i] = "S"
                 placed = True
-
         else:
-            # Randomly select a row and column where the ship will be placed
             row = random.randint(0, len(board) - ship_size)
             col = random.randint(0, len(board[0]) - 1)
-            
-            # Check if all cells are empty (~)
             if all(board[row + i][col] == "~" for i in range(ship_size)):
                 for i in range(ship_size):
-                    board[row + i][col] = "S"  # Place the ship ("S" stands for ship)
+                    board[row + i][col] = "S"
                 placed = True
 
 def shoot(board, row, col):
     """
-    Executes a shot at the specified location on the board.
-    If the location has already been shot at (X or O), the player is informed to pick a new spot.
-    If the shot hits a ship ("S"), it is marked with "X", otherwise it is marked with "O".
+    Utför ett skott och returnerar om det är en träff.
     """
     if board[row][col] in ["X", "O"]:
-        print("You have already shot here! Choose another spot.")
+        print("Du har redan skjutit här!")
         return None
     if board[row][col] == "S":
-        board[row][col] = "X"  # "X" means hit
+        board[row][col] = "X"
         return True
-    elif board[row][col] == "~":
-        board[row][col] = "O"  # "O" means miss
+    else:
+        board[row][col] = "O"
         return False
-    return None
 
 def get_player_shot():
-    """
-    Asks for the player's shot. Ensures the entered row and column are within valid limits (0-7).
-    If the input is invalid, the prompt will repeat until a valid value is entered.
-    """
+    """Frågar efter spelarens skott och säkerställer giltig inmatning med bokstäver."""
+    letters = "ABCDEFGH"
     while True:
         try:
-            row = int(input("Select a row between (0-7): "))
-            col = int(input("Select a column (0-7): "))
-            if 0 <= row < 8 and 0 <= col < 8:
-                return row, col
+            col = input("Välj en kolumn (A-H): ").upper()
+            if col not in letters:
+                print("Ogiltig kolumn. Vänligen välj mellan A-H.")
+                continue
+            col_index = letters.index(col)
+            row = int(input("Välj en rad (0-7): "))
+            if 0 <= row < 8:
+                return row, col_index
             else:
-                print("Please choose values between 0 and 7.")
+                print("Ogiltig rad. Vänligen välj mellan 0-7.")
         except ValueError:
-            print("Invalid input, try again.")
-
-def ask_play_again():
-    """
-    Asks the player if they want to play again after the game is over.
-    Accepts 'y' or 'n' as responses. If the answer is invalid, the prompt repeats.
-    """
-    while True:
-        replay = input("Do you want to play again? (y/n):\n ").lower()
-        if replay == 'y':
-            return True
-        elif replay == 'n':
-            return False
-        else:
-            print("Invalid input, please enter 'y' or 'n'.")
+            print("Ogiltig inmatning, försök igen.")
 
 def play_game():
     """
-    The main game logic. The player and the computer take turns shooting at each other's boards.
-    The game continues until one party has sunk all of the opponent's ships or the player runs out of shots.
+    Huvudspel där spelare och dator turas om att skjuta.
     """
-    global player_score, computer_score, player_board, computer_board, hidden_computer_board, player_shots_left
-    while True:
-        if player_shots_left <= 0:
-            print("You're out of shots! Game over!")
-            break
-        
-        # Display the player's board and the computer's board with hits/misses
-        print("Player's board:")
+    player_board = create_board(board_size)
+    computer_board = create_board(board_size)
+    hidden_computer_board = create_board(board_size)
+    player_shots_left = max_shots
+    player_score = 0
+    computer_score = 0
+
+    # Placera skepp
+    for ship_size in ships:
+        place_ship(player_board, ship_size)
+        place_ship(computer_board, ship_size)
+
+    while player_shots_left > 0:
+        clear_screen()
+
+        print("Ditt bräde:")
         print_board(player_board)
 
-        print("Computer's board with hits/misses:")
+        print("Datorns bräde:")
         print_board(hidden_computer_board, hide_ships=True)
 
-        # Ask for the player's shot and check the result
+        print(f"Skott kvar: {player_shots_left}")
+        print(f"Din poäng: {player_score} | Datorns poäng: {computer_score}")
+
         row, col = get_player_shot()
 
+        # Spelarens tur
         if shoot(computer_board, row, col):
-            print("HIT!")
+            print("TRÄFF!")
             hidden_computer_board[row][col] = "X"
             player_score += 10
         else:
             print("Miss!")
             hidden_computer_board[row][col] = "O"
 
-        player_shots_left -= 1  # Decrease the shots left
-
-        # Check if the player has sunk all of the computer's ships
+        # Kontrollera om alla datorns skepp är sänkta
         if all(cell != "S" for row in computer_board for cell in row):
-            print("Congratulations, you have sunk all of the computer's ships!")
-            player_score += 50
+            print("Grattis, du har sänkt alla datorns skepp!")
             break
 
-        # Computer's turn to shoot
-        print("The computer shoots at your board…")
-        computer_row, computer_col = random.randint(0, 7), random.randint(0, 7)
-        if shoot(player_board, computer_row, computer_col):
-            print(f"The computer hit on ({computer_row}, {computer_col})!")
+        # Datorns tur
+        comp_row, comp_col = random.randint(0, 7), random.randint(0, 7)
+        while player_board[comp_row][comp_col] in ["X", "O"]:
+            comp_row, comp_col = random.randint(0, 7), random.randint(0, 7)
+
+        if shoot(player_board, comp_row, comp_col):
+            print(f"Datorn träffade på ({comp_row}, {comp_col})!")
             computer_score += 10
         else:
-            print(f"The computer missed on ({computer_row}, {computer_col})!")
+            print(f"Datorn missade på ({comp_row}, {comp_col})!")
 
-        # Check if the computer has sunk all of the player's ships
+        # Kontrollera om alla spelarens skepp är sänkta
         if all(cell != "S" for row in player_board for cell in row):
-            print("Sorry, the computer has sunk all your ships!")
-            computer_score += 50
+            print("Tyvärr, datorn har sänkt alla dina skepp!")
             break
 
-    print(f"Game Over! Your score: {player_score}, Computer's score: {computer_score}")
-    if ask_play_again():
-        # Reset the game state and play again
-        player_board = create_board(board_size)
-        computer_board = create_board(board_size)
-        hidden_computer_board = create_board(board_size)
-        player_shots_left = max_shots  # Reset shots left
-        for ship_size in ships:
-            place_ship(player_board, ship_size)
-            place_ship(computer_board, ship_size)
-            play_game()  # Restart the game
+        player_shots_left -= 1
 
-# Main script to initialize the game
-if print_welcome_message():  # Only start the game if the player is ready
-    # Initialize boards, ships, and other variables
-    player_board = create_board(board_size)
-    computer_board = create_board(board_size)
-    hidden_computer_board = create_board(board_size)
+    print(f"Spelet är slut! Din poäng: {player_score}, Datorns poäng: {computer_score}")
 
-    # Place ships on the boards
-    for ship_size in ships:
-        place_ship(player_board, ship_size)
-        place_ship(computer_board, ship_size)
-
-    # Now start the game
-    play_game()
-else:
-    print("The game was not started.")
-     
-
-
-
-"""
-import random
-
-def create_board(size):
-    return [["~"] * size for _ in range(size)]
-
-def print_board(board):
-    print("  " + " ".join(str(i) for i in range(len(board[0]))))
-    for index, row in enumerate(board):
-        print(f"{index} " + " ".join(row))
-    print("\n")
-
-
-def place_ship(board, ship_size):
-    placed = False
-    while not placed:
-
-        orientation = random.choice(["horizontal", "vertical"])
-        if orientation == "horizontal":
-            row = random.randint(0, len(board) -1)
-            col = random.randint(0, len(board[0]) - ship_size)
-
-            if all(board[row][col + i] == "~" for i in range(ship_size)):
-                for i in range(ship_size):
-                    board[row][col + i] = "S"
-                    placed = True
-
-            else:
-                row = random.randint(0, len(board) - ship_size)
-                col = random.randint(0, len(board[0]) -1)
-                if all(board[row + i][col] == "~" for i in range(ship_size)):
-                    for i in range(ship_size):
-                        board[row + i][col] = "S"
-                    placed = True       
-
-
-def shoot(board, row, col):
-    if board[row][col] in ["X", "O"]:
-        print("You already shot here! Choose another spot.")
-        return None
-    if board[row][col] == "S":
-        board[row][col] = "X" # X Means hit!
-        return True
-    elif board[row][col] == "~":
-        board[row][col] = "O" # O Means miss!
-        return False
-    return None
-
-def get_player_shot():
-    while True:
-        try:
-            row = int(input("Select a row between (0-7)"))
-            col = int(input("Select a column (0-7): "))
-            if 0 <= row < 8 and 0 <= col < 8:
-                return row, col
-            else:
-                print("Please choose values ​​between 0 and 7.")
-        except ValueError:
-            print("Invalid input, Try again.")
-
-board_size = 8
-player_board = create_board(board_size)
-computer_board = create_board(board_size)
-
-ships = [3, 3, 2, 2, 1, 1] #Sizes of the ships, Two bigger ships (3), two medium ships(2) and 2 small ships(1)
-
-for ship_size in ships:
-    place_ship(player_board, ship_size)
-    place_ship(computer_board, ship_size)
-
-hidden_computer_board = create_board(board_size)
-
-player_score = 0
-computer_score = 0
-
-def play_game():
-    global player_score, computer_score
-    while True:
-        print("Players board")
-        print_board(player_board)
-
-        print("Computers board with hits/misses:")
-        print_board(hidden_computer_board)
-
-        row, col = get_player_shot()
-
-        if shoot(computer_board, row, col):
-            print("HIT!")
-            hidden_computer_board[row][col] = "X"
-            player_score +=10
-
-        else:
-            print("Miss!")
-            hidden_computer_board[row][col] = "O"    
-
-
-        if all(cell != "S" for row in computer_board for cell in row):
-            print("Congratulations, you have sunk all of the computer's ships!")
-            player_score += 50
-            break
-
-        print("The computer shoots at your board…")
-        computer_row, computer_col = random.randint(0, 7), random.randint(0, 7)
-        if shoot(player_board, computer_row, computer_col):
-            print(f"The computer hit on({computer_row}, {computer_col})!")
-            computer_score += 10
-        else:
-            print(f"The computer missed on ({computer_row}, {computer_col})!")
-
-        if all(cell != "S" for row in player_board for cell in row):
-            print("Sorry, the computer has sunk all your ships!")
-            computer_score += 50
-            break
-
-        print(f"Scores: Player - {player_score}, Computer - {computer_score}\n")
-
-print("Players board with ship:")
-print_board(player_board)
-
+# Starta spelet
+print_welcome_message()
 play_game()
-"""
-
-
-
-"""
-#board_size = 8
-player_board = create_board(board_size)
-computer_board = create_board(board_size)
-
-print("Players board:")
-print(player_board)
-
-print("Computers board:")
-print(player_board)
-
-def place_ship(board):
-    row = random.randint(0, len(board) -1)
-    col = random.randint(0, len(board) -1)
-
-    while board[row][col] == "S":
-        row = random.randint(0, len(board) -1)
-        col = random.randint(0, len(board[0]) -1)
-    board[row][col] = "S"
-
-place_ship(player_board)
-place_ship(computer_board)
-
-print("Players board with ship:")
-print_board(player_board)
-
-print("Computers board with ship (invisible for the player):")
-hidden_computer_board = create_board(board_size)
-print_board(hidden_computer_board)
-
-def shoot(board, row, col):
-    if board[row][col] == "S":
-        board[row][col] = "X" # X means hit
-        return True
-    elif board[row][col] == "~":
-        board[row][col] = "0" # 0 means miss
-        return False
-    return None
-
-def get_player_shot():
-    while True:
-        try:
-            row = int(input("Choose a row between (0-4): "))
-            col = int(input ("Choose a column between (0-4): "))
-            if 0 <= row < 5 and 0 <= col < 5:
-               return row, col
-            else:
-                print("Please choose a value between 0 and 4.")     
-        except ValueError:
-            print("Unvalid input, try again.")
-
-def play_game():
-
-    while True:
-        print("Players board:")
-        print_board(player_board)
-
-        print("Computers board with hits/misses")
-        print_board(hidden_computer_board)
-
-        row, col = get_player_shot()
-
-        if shoot(computer_board, row, col):
-            print("HIT!")
-            hidden_computer_board[row][col] = "X"
-
-        else:
-            print("MISS!")
-            hidden_computer_board[row][col] = "0"
-
-        if all(cell != "S" for row in computer_board for cell in row):
-            print("Congratulations, you have shoot down all the computers ship!")
-            break 
-
-        print("Computer is shooting on your board...")
-        computer_row, computer_col = random.randint(0, 7), random.randint(0, 7)
-        if shoot(player_board, computer_row, computer_col):
-            print(f"Computer hit on ({computer_row}, {computer_col})!")
-        else:
-            print(f"Computer missed on ({computer_row}, {computer_col})!")
-
-        if all(cell != "S" for row in player_board for cell in row):
-            print("Sorry, computer have sunken all your ships comrat!")
-            break
-
-board_size = 8
-player_board = create_board(board_size)
-computer_board = create_board(board_size)
-
-ships = [3, 3, 2, 2, 1, 1] #Two bigger ships, two medium ships and two small ships
-
-for ship_size in ships:
-    place_ship(player_board, ship_size)
-    place_ship(computer_board, ship_size)
-
-hidden_computer_board = create_board(board_size)
-
-print("Players board with ship:")
-print_board(player_board)
-
-#play_game()
-"""
