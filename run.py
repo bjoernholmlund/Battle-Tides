@@ -42,7 +42,7 @@ def get_board_size():
     while True:
         try:
             size = int(input("Enter the size of the board (e.g., 5 for a 5x5 board): "))
-            if 3 <= size <= 10:
+            if 4 <= size <= 10:
                 return size
             else:
                 print("Please choose a size between 3 and 10.")
@@ -58,7 +58,7 @@ def print_board(board, hide_ships=False):
     letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     print("    " + "   ".join(letters[:len(board)]))
     for index, row in enumerate(board):
-        row_display = f"{index + 1:>2} | "
+        row_display = f"{index + 1:>1} | "
         row_display += "   ".join(
             "\033[91mX\033[0m" if cell == "X" else  # Red for hit
             "\033[94mO\033[0m" if cell == "O" else  # Blue for miss
