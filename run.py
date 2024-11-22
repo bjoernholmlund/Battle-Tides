@@ -10,8 +10,9 @@ def clear_screen():
     """Clears the screen for better user experience."""
     os.system("cls" if os.name == "nt" else "clear")
 
-def print_welcome_message(player_name):
-    """Prints a welcome message to the player."""
+def print_welcome_message():
+    """Prints a welcome message to the player and returns the player's name."""
+    player_name = input("Enter your name to start: ")
     clear_screen()
 
     welcome_message = r"""
@@ -36,16 +37,27 @@ def print_welcome_message(player_name):
     Let the battle begin...!
     """
     print(welcome_message.format(player_name=player_name))
+    while True:
+        ready_to_play = input("Are you ready to play? (y/n): ").lower()
+        if ready_to_play == 'y':
+            print("Great! Let's start the game!")
+            time.sleep(2)
+            return player_name  # Return the player's name
+        elif ready_to_play == 'n':
+            print("Okay, come back when you're ready!")
+            return None
+        else:
+            print("Invalid input. Please answer with 'y' for yes or 'n' for no.")
 
 def get_board_size():
     """Asks the player to input the board size."""
     while True:
         try:
-            size = int(input("Enter the size of the board (e.g., 5 for a 5x5 board): "))
+            size = int(input("Enter the size of the board (e.g., 4 for a 4x4 board): "))
             if 4 <= size <= 10:
                 return size
             else:
-                print("Please choose a size between 3 and 10.")
+                print("Please choose a size between 4 and 10.")
         except ValueError:
             print("Invalid input. Enter a number.")
 
@@ -90,17 +102,17 @@ def place_ship(board, ship_size):
                 placed = True
 
 def shoot(board, row, col):
-    """Executes a shot and returns if it was a hit."""
-    if board[row][col] in ["X", "O"]:
-        return None  # Already shot here
+    """Executes a shot and returns if it was a hit or not."""
+    if board[row][col] in ["X", "O"]:  # Check if the cell is already shot
+        return False  # Indicate that the shot was invalid
     if board[row][col] == "S":
         board[row][col] = "X"
-        return True
+        return True  # Hit
     else:
         board[row][col] = "O"
-        return False
+        return False  # Miss
 
-def get_player_shot(board_size):
+def get_player_shot(board_size, computer_board, shots_taken):
     """Asks for player's shot and ensures valid input."""
     letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     while True:
@@ -112,83 +124,91 @@ def get_player_shot(board_size):
             col_index = letters.index(col)
             row = int(input(f"Choose a row (1-{board_size}): "))
             if 1 <= row <= board_size:
-                return row - 1, col_index
+                row_index = row - 1
+                if (row_index, col_index) in shots_taken:
+                    print("\033[93mError: You already shot here! Try again.\033[0m")
+                    continue  # Continue prompting until a valid shot is made
+                else:
+                    result = shoot(computer_board, row_index, col_index)
+                    shots_taken.add((row_index, col_index))  # Register the shot
+                    if result:
+                        return row_index, col_index, True  # Hit
+                    else:
+                        return row_index, col_index, False  # Miss
             else:
                 print(f"Invalid row. Please choose between 1 and {board_size}.")
         except ValueError:
             print("Invalid input, try again.")
 
-def ask_to_play_again():
-    """Asks the player if they want to play again."""
-    while True:
-        play_again = input("Do you want to play again? (y/n): ").lower()
-        if play_again == 'y':
-            return True
-        elif play_again == 'n':
-            print("Thanks for playing! Goodbye.")
-            return False
-        else:
-            print("Invalid input. Please answer with 'y' for yes or 'n' for no.")
-
 def play_game():
     """Main game loop where player and computer take turns shooting."""
-    player_name = input("Enter your name to start: ")
-    
-    while True:
-        print_welcome_message(player_name)
+    player_name = print_welcome_message()
+    if not player_name:
+        return
 
-        board_size = get_board_size()
-        player_board = create_board(board_size)
-        computer_board = create_board(board_size)
-        hidden_computer_board = create_board(board_size)
-        player_shots_left = max_shots
-        player_score = 0
-        computer_score = 0
+    board_size = get_board_size()
+    player_board = create_board(board_size)
+    computer_board = create_board(board_size)
+    hidden_computer_board = create_board(board_size)
+    player_shots_left = max_shots
+    player_score = 0
+    computer_score = 0
 
-        # Place ships
-        for ship_size in ships:
-            place_ship(player_board, ship_size)
-            place_ship(computer_board, ship_size)
+    shots_taken = set()  # Keeps track of all shots taken by the player
 
-        while player_shots_left > 0:
-            clear_screen()
-            print(f"{player_name}, here is the computer's board:")
-            print_board(hidden_computer_board, hide_ships=True)
-            print(f"\nShots remaining: {player_shots_left}")
-            print(f"Your score: {player_score} | Computer's score: {computer_score}")
+    # Place ships
+    for ship_size in ships:
+        place_ship(player_board, ship_size)
+        place_ship(computer_board, ship_size)
 
-            # Player's turn
-            row, col = get_player_shot(board_size)
-            if shoot(computer_board, row, col):
-                print("\033[91mHIT!\033[0m")
-                hidden_computer_board[row][col] = "X"
-                player_score += 10
-            else:
-                print("\033[94mMiss!\033[0m")
-                hidden_computer_board[row][col] = "O"
-
-            time.sleep(1)
-
-            # Computer's turn
-            comp_row, comp_col = random.randint(0, board_size - 1), random.randint(0, board_size - 1)
-            while player_board[comp_row][comp_col] in ["X", "O"]:
-                comp_row, comp_col = random.randint(0, board_size - 1), random.randint(0, board_size - 1)
-
-            if shoot(player_board, comp_row, comp_col):
-                print(f"The computer \033[91mhits\033[0m at ({comp_row + 1}, {comp_col + 1})!")
-                computer_score += 10
-            else:
-                print(f"The computer \033[94mmisses\033[0m at ({comp_row + 1}, {comp_col + 1})!")
-
-            time.sleep(1)
-            player_shots_left -= 1
-
+    while player_shots_left > 0:
         clear_screen()
-        print(f"Game over, {player_name}! Your score: {player_score}, Computer's score: {computer_score}")
+        print(f"{player_name}, here is the computer's board:")
+        print_board(hidden_computer_board, hide_ships=True)
+        print(f"\nShots remaining: {player_shots_left}")
+        print(f"Your score: {player_score} | Computer's score: {computer_score}")
 
-        # Ask to play again
-        if not ask_to_play_again():
+        # Player's turn
+        row, col, hit = get_player_shot(board_size, computer_board, shots_taken)
+        if hit:
+            print("\033[91mHIT!\033[0m")
+            hidden_computer_board[row][col] = "X"
+            player_score += 10
+        else:
+            print("\033[94mMiss!\033[0m")
+            hidden_computer_board[row][col] = "O"
+
+        time.sleep(1)
+
+        # Computer's turn
+        comp_row, comp_col = random.randint(0, board_size - 1), random.randint(0, board_size - 1)
+        while player_board[comp_row][comp_col] in ["X", "O"]:
+            comp_row, comp_col = random.randint(0, board_size - 1), random.randint(0, board_size - 1)
+
+        if shoot(player_board, comp_row, comp_col):
+            print(f"The computer \033[91mhits\033[0m at ({comp_row + 1}, {comp_col + 1})!")
+            computer_score += 10
+        else:
+            print(f"The computer \033[94mmisses\033[0m at ({comp_row + 1}, {comp_col + 1})!")
+
+        time.sleep(1)
+        player_shots_left -= 1
+
+    clear_screen()
+    print(f"Game over, {player_name}! Your score: {player_score}, Computer's score: {computer_score}")
+
+    # Ask if the player wants to play again
+    while True:
+        play_again = input("Do you want to play again? (y/n): ").lower()
+        if play_again == "y":
+            print("Great! Starting a new game...\n")
+            play_game()  # Restart the game
             break
+        elif play_again == "n":
+            print("Thanks for playing! Goodbye!")
+            break
+        else:
+            print("Invalid input. Please enter 'y' for yes or 'n' for no.")
 
 # Start the game
 play_game()
