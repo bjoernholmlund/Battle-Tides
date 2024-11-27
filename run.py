@@ -2,18 +2,23 @@ import os
 import time
 import random
 
-# Defaultvärden
-ships = [3, 2, 1]
-max_shots = 15
+# Default settings for the game
+ships = [3, 2, 1] # Sizes of ships to place on the board
+max_shots = 15 # Maximum number of shots the player has
 
 
 def clear_screen():
-    """Clears the screen for better user experience."""
+    """
+    Clears the screen for better user experience.
+    """
     os.system("cls" if os.name == "nt" else "clear")
 
 
 def print_welcome_message():
-    """Prints a welcome message to the player and returns the player's name."""
+    """
+    Prints a welcome message and returns the player's name.
+    Asks the player if they are ready to start the game.
+    """
     player_name = input("Enter your name to start: ")
     clear_screen()
 
@@ -42,7 +47,7 @@ def print_welcome_message():
         ready_to_play = input("Are you ready to play? (y/n): ").lower()
         if ready_to_play == 'y':
             print("Great! Let's start the game!")
-            time.sleep(2)
+            time.sleep(2) # Brief pause for dramatic effect
             return player_name  # Return the player's name
         elif ready_to_play == 'n':
             print("Okay, come back when you're ready!")
@@ -53,7 +58,10 @@ def print_welcome_message():
 
 
 def get_board_size():
-    """Asks the player to input the board size."""
+    """
+    Asks the player to choose the size of the game board.
+    Ensures the size is between 4x4 and 10x10.
+    """
     while True:
         try:
             size = int(input(
@@ -67,16 +75,18 @@ def get_board_size():
 
 
 def create_board(size):
-    """Creates an empty game board with the given size."""
+    """
+    Creates an empty game board with the given size.
+    """
     return [["~"] * size for _ in range(size)]
 
 
 def print_board(board, hide_ships=False):
     """Prints the board with row and column labels."""
     letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    print("    " + "   ".join(letters[:len(board)]))
+    print("    " + "   ".join(letters[:len(board)])) # Column labels
     for index, row in enumerate(board):
-        row_display = f"{index + 1:>1} | "
+        row_display = f"{index + 1:>1} | " # Row numbers
         row_display += "   ".join(
             "\033[91mX\033[0m" if cell == "X" else  # Red for hit
             "\033[94mO\033[0m" if cell == "O" else  # Blue for miss
@@ -92,11 +102,11 @@ def place_ship(board, ship_size):
     """Places a ship randomly on the board."""
     placed = False
     while not placed:
-        orientation = random.choice(["horizontal", "vertical"])
+        orientation = random.choice(["horizontal", "vertical"]) # Random orientation
         if orientation == "horizontal":
             row = random.randint(0, len(board) - 1)
             col = random.randint(0, len(board[0]) - ship_size)
-            if all(board[row][col + i] == "~" for i in range(ship_size)):
+            if all(board[row][col + i] == "~" for i in range(ship_size)): # Check space
                 for i in range(ship_size):
                     board[row][col + i] = "S"
                 placed = True
@@ -105,14 +115,16 @@ def place_ship(board, ship_size):
             col = random.randint(0, len(board[0]) - 1)
             if all(board[row + i][col] == "~" for i in range(ship_size)):
                 for i in range(ship_size):
-                    board[row + i][col] = "S"
+                    board[row + i][col] = "S" # Place ship
                 placed = True
 
 
 def shoot(board, row, col):
-    """Executes a shot and returns if it was a hit or not."""
-    if board[row][col] in ["X", "O"]:  # Check if the cell is already shot
-        return False  # Indicate that the shot was invalid
+    """
+    Executes a shot and returns if it was a hit or not.
+    """
+    if board[row][col] in ["X", "O"]:  # Already shot
+        return False  # Invalid shot
     if board[row][col] == "S":
         board[row][col] = "X"
         return True  # Hit
@@ -122,7 +134,9 @@ def shoot(board, row, col):
 
 
 def get_player_shot(board_size, computer_board, shots_taken):
-    """Asks for player's shot and ensures valid input."""
+    """
+    Asks for player's shot and ensures valid input.
+    """
     letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     while True:
         try:
