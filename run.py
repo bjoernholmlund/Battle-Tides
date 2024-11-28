@@ -3,8 +3,8 @@ import time
 import random
 
 # Default settings for the game
-ships = [3, 2, 1] # Sizes of ships to place on the board
-max_shots = 15 # Maximum number of shots the player has
+ships = [3, 2, 1]  # Sizes of ships to place on the board
+max_shots = 15  # Maximum number of shots the player has
 
 
 def clear_screen():
@@ -47,7 +47,7 @@ def print_welcome_message():
         ready_to_play = input("Are you ready to play? (y/n): ").lower()
         if ready_to_play == 'y':
             print("Great! Let's start the game!")
-            time.sleep(2) # Brief pause for dramatic effect
+            time.sleep(2)  # Brief pause for dramatic effect
             return player_name  # Return the player's name
         elif ready_to_play == 'n':
             print("Okay, come back when you're ready!")
@@ -84,9 +84,9 @@ def create_board(size):
 def print_board(board, hide_ships=False):
     """Prints the board with row and column labels."""
     letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    print("    " + "   ".join(letters[:len(board)])) # Column labels
+    print("    " + "   ".join(letters[:len(board)]))  # Column labels
     for index, row in enumerate(board):
-        row_display = f"{index + 1:>1} | " # Row numbers
+        row_display = f"{index + 1:>1} | "  # Row numbers
         row_display += "   ".join(
             "\033[91mX\033[0m" if cell == "X" else  # Red for hit
             "\033[94mO\033[0m" if cell == "O" else  # Blue for miss
@@ -102,11 +102,11 @@ def place_ship(board, ship_size):
     """Places a ship randomly on the board."""
     placed = False
     while not placed:
-        orientation = random.choice(["horizontal", "vertical"]) # Random orientation
+        orientation = random.choice(["horizontal", "vertical"])
         if orientation == "horizontal":
             row = random.randint(0, len(board) - 1)
             col = random.randint(0, len(board[0]) - ship_size)
-            if all(board[row][col + i] == "~" for i in range(ship_size)): # Check space
+            if all(board[row][col + i] == "~" for i in range(ship_size)):
                 for i in range(ship_size):
                     board[row][col + i] = "S"
                 placed = True
@@ -115,7 +115,7 @@ def place_ship(board, ship_size):
             col = random.randint(0, len(board[0]) - 1)
             if all(board[row + i][col] == "~" for i in range(ship_size)):
                 for i in range(ship_size):
-                    board[row + i][col] = "S" # Place ship
+                    board[row + i][col] = "S"  # Place ship
                 placed = True
 
 
