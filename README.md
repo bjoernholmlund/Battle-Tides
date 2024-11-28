@@ -85,7 +85,7 @@ To fix this, I implemented a validation system to track and check all shots fire
 
 - No bugs remaining
 
-## Data Model (Summary)
+## Data Model
 
 The game uses a straightforward data model to manage its state:
 
@@ -122,7 +122,7 @@ The game uses a straightforward data model to manage its state:
 
 ## Credits
 
-- **Developer:** [Björn Holmlund]  
+- **Developer:** Björn Holmlund
   Designed, coded, and tested the entire Battleship game project.  
 
 - **Resources and Inspiration:**  
