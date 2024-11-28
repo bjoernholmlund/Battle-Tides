@@ -66,7 +66,7 @@ This game features:
 
 ### Validator Testing
 
-- No errors were returned, when trying it in [CI Python Linter]("https://pep8ci.herokuapp.com/")
+- No errors were returned, when trying it in <a href="https://pep8ci.herokuapp.com/">CI Python Linter</a>
 ![linther](CIPythonlinter.png)
 
 ## Challenges Faced and Fixed Bugs
