@@ -69,7 +69,7 @@ This game features:
 - <a href="https://pep8ci.herokuapp.com/"></a><br>
 
     - No errors were returned, when trying it in CI python Linter
-
+![linther](CIPythonlinter.png)
 
 ## Challenges Faced and Fixed Bugs
 **Issue: Duplicate Shots Allowed Without Warning**
