@@ -2,7 +2,7 @@
 
 ![mockup](Mockup.png)
 
-### The live website can be found here <a href="https://battle-tides-a97dab86fdf8.herokuapp.com/"></a>
+### The live website can be found here <a href="https://battle-tides-a97dab86fdf8.herokuapp.com/">Battle Tides</a>
 
 ## Description
 **Battle Tides**  is a console-based Battleship game where you play against the computer. The objective is to sink all of the opponent's ships before they sink yours. Take turns shooting at each other's ships, and try to strategize your moves to avoid being hit while hitting your opponent's ships.
