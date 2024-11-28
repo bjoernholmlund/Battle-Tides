@@ -85,4 +85,51 @@ To fix this, I implemented a validation system to track and check all shots fire
 
 - No bugs remaining
 
-## Technoligies Used
+## Data Model (Summary)
+
+The game uses a straightforward data model to manage its state:
+
+1. **Boards:**
+
+    - Represented as 2D lists where each cell indicates water ("~"), a ship ("S"), a hit ("X"), or a miss ("O").
+
+2. **Ships:** 
+
+    - Stored as a list of integers, with each number representing the size of a ship, e.g., [3, 2, 1] for three ships of sizes 3, 2, and 1.
+
+3. **Shots Taken:**
+
+    - A set tracks the coordinates of all previous player shots to prevent duplicates.
+
+4. **Scores:**
+
+    - Player and computer scores are tracked as integers, increasing by 10 points for each hit.
+
+5. **Game Variables:**
+
+    - board_size for grid dimensions, player_shots_left for remaining turns, and hidden_computer_board to conceal computer ship positions.
+
+## Deployment
+
+- This project was deployed using Heroku
+
+    - Steps for deployment:
+    * Fork or clone this repository
+    + Create a new Heroku app
+    - Set the buildbacks to Python and NodeJS in that order
+    * Link the Heroku app to the repository
+    + Click on Deploy
+
+## Credits
+
+- **Developer:** [Björn Holmlund]  
+  Designed, coded, and tested the entire Battleship game project.  
+
+- **Resources and Inspiration:**  
+  - Game logic inspired by classic Battleship game mechanics.  
+  - Coding references and tips from [Real Python](https://realpython.com), [W3Schools](https://www.w3schools.com), and [GeeksforGeeks](https://www.geeksforgeeks.org).  
+
+- **Libraries Used:**  
+  - Python built-in libraries: `os`, `random`, `time`.  
+  - Code validation tool: PEP8CI for ensuring PEP8 compliance.  
+ 
