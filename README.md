@@ -22,24 +22,22 @@ This game features:
 
 1. **Starting the Game**:
 
-When the game starts, you will be prompted to enter your name.
-Then, the game will display a welcome message and explain the basic rules.
-You will be asked to choose the size of the game board (between 4x4 and 10x10).
+    When the game starts, you will be prompted to enter your name.<br><br>
+    Then, the game will display a welcome message and explain the basic rules.<br><br>
+    You will be asked to choose the size of the game board (between 4x4 and 10x10).<br><br>
 
 2. **Taking Turns**:
 
-The game alternates between the player and the computer.
-On your turn, you will be asked to select a column (A to X) and a row (1 to the board size).
-The computer will take a shot randomly at your board.
-The game will indicate whether each shot is a hit (H) or a miss (M) for both you and the computer.
+    The game alternates between the player and the computer.<br><br>
+    On your turn, you will be asked to select a column (A to X) and a row (1 to the board size).<br><br>
+    The computer will take a shot randomly at your board.<br><br>
+    The game will indicate whether each shot is a hit (H) or a miss (M) for both you and the computer.<br><br>
 
 3. **Winning the Game**:
 
-The first player to sink all the opponent's ships wins.
-The game ends when the player runs out of shots or one player sinks all the ships.
+    The first player to sink all the opponent's ships wins.<br><br>
+    The game ends when the player runs out of shots or one player sinks all the ships.<br><br>
 
 4. **Play Again**:
 
-After the game finishes, you will be asked if you want to play again. Type 'y' for yes or 'n' for no.
-
-
+    After the game finishes, you will be asked if you want to play again. Type 'y' for yes or 'n' for no.<br><br>
