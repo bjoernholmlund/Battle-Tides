@@ -58,8 +58,3 @@ This game features:
 
 ## Testing
 
-    The game's Python code has been tested for PEP 8 compliance using PEP8CI. This ensures:
-
-    - Proper formatting and indentation.
-    * Consistent and meaningful variable naming.
-    + Readable and maintainable code.
