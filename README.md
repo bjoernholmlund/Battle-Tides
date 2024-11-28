@@ -1,5 +1,7 @@
 # Battle Tides: Python Battleship Game
 
+![mockup](Mockup.png)
+
 ## Description
 **Battle Tides**  is a console-based Battleship game where you play against the computer. The objective is to sink all of the opponent's ships before they sink yours. Take turns shooting at each other's ships, and try to strategize your moves to avoid being hit while hitting your opponent's ships.
 
@@ -35,12 +37,12 @@ This game features:
 
 3. **Winning the Game**:
 
-- The first player to sink all the opponent's ships wins.<br>
-* The game ends when the player runs out of shots or one player sinks all the ships.<br>
+    - The first player to sink all the opponent's ships wins.<br>
+    * The game ends when the player runs out of shots or one player sinks all the ships.<br>
 
 4. **Play Again**:
 
-- After the game finishes, you will be asked if you want to play again. Type 'y' for yes or 'n' for no.<br>
+    - After the game finishes, you will be asked if you want to play again. Type 'y' for yes or 'n' for no.<br>
 
 
 ## Game Rules
@@ -64,7 +66,8 @@ This game features:
 
 ### Validator Testing
 
-- <a href="https://pep8ci.herokuapp.com/"></a>
+- <a href="https://pep8ci.herokuapp.com/"></a><br>
+
     - No errors were returned, when trying it in CI python Linter
 
 
@@ -79,6 +82,7 @@ To fix this, I implemented a validation system to track and check all shots fire
 
 
 ## Remaining Bugs
+
 - No bugs remaining
 
 ## Tecnoligies Used
