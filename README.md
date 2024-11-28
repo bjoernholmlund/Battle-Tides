@@ -16,7 +16,7 @@ This game features:
 - Random Ship Placement: Ships are randomly placed on the board, and the opponent’s ships are hidden.
 * Hit/Miss Feedback: After each shot, the game informs the player whether the shot was a hit or miss.
 + Score Tracking: Scores for both the player and the computer are tracked and displayed during gameplay.
-* Replay Option: After the game ends, the player has the option to start a new game or exit.
+- Replay Option: After the game ends, the player has the option to start a new game or exit.
 
 ## How to Play
 
@@ -58,3 +58,12 @@ This game features:
 
 ## Testing
 
+I have manually tested this project using the following methods:
+
+    - Passed the code through PEP8 to ensure compliance and confirmed there are no issues.
+    * Tested various invalid inputs, such as entering strings where numbers were expected, providing duplicate inputs, and inputting values that were out of bounds.
+    + Conducted tests in both my local terminal and the Heroku terminal to verify functionality across environments.
+
+### Validator Testing
+
+    - <a href="https://pep8ci.herokuapp.com/"</a>
