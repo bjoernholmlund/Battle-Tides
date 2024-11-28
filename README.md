@@ -58,8 +58,6 @@ This game features:
 
 ## Testing
 
-    I have manually tested this project using the following methods:
-
 - Passed the code through PEP8 to ensure compliance and confirmed there are no issues.
 * Tested various invalid inputs, such as entering strings where numbers were expected, providing duplicate inputs, and inputting values that were out of bounds.
 + Conducted tests in both my local terminal and the Heroku terminal to verify functionality across environments.
