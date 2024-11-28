@@ -22,33 +22,33 @@ This game features:
 
 1. **Starting the Game**:
 
-    - When the game starts, you will be prompted to enter your name.<br>
-    * Then, the game will display a welcome message and explain the basic rules.<br>
-    + You will be asked to choose the size of the game board (between 4x4 and 10x10).<br>
+- When the game starts, you will be prompted to enter your name.<br>
+* Then, the game will display a welcome message and explain the basic rules.<br>
++ You will be asked to choose the size of the game board (between 4x4 and 10x10).<br>
 
 2. **Taking Turns**:
 
-    - The game alternates between the player and the computer.<br>
-    * On your turn, you will be asked to select a column (A to X) and a row (1 to the board size).<br>
-    + The computer will take a shot randomly at your board.<br>
-    - The game will indicate whether each shot is a hit (H) or a miss (M) for both you and the computer.<br>
+- The game alternates between the player and the computer.<br>
+* On your turn, you will be asked to select a column (A to X) and a row (1 to the board size).<br>
++ The computer will take a shot randomly at your board.<br>
+- The game will indicate whether each shot is a hit (H) or a miss (M) for both you and the computer.<br>
 
 3. **Winning the Game**:
 
-    - The first player to sink all the opponent's ships wins.<br>
-    * The game ends when the player runs out of shots or one player sinks all the ships.<br>
+- The first player to sink all the opponent's ships wins.<br>
+* The game ends when the player runs out of shots or one player sinks all the ships.<br>
 
 4. **Play Again**:
 
-    - After the game finishes, you will be asked if you want to play again. Type 'y' for yes or 'n' for no.<br>
+- After the game finishes, you will be asked if you want to play again. Type 'y' for yes or 'n' for no.<br>
 
 
 ## Game Rules
 
 - **Ships**:
 
-    - There are 3 ships: a 3-cell ship, a 2-cell ship, and a 1-cell ship.
-    * The ships are placed randomly on the board at the start of the game, and their locations are hidden from the player.
+- There are 3 ships: a 3-cell ship, a 2-cell ship, and a 1-cell ship.
+* The ships are placed randomly on the board at the start of the game, and their locations are hidden from the player.
 
 * **Gameplay**:
 
@@ -56,14 +56,12 @@ This game features:
     * The goal is to hit all the opponent's ships before they hit yours.
     + Each hit earns 10 points for the player, and the game ends when all ships are sunk.
 
-## Testing
+### Testing
 
 I have manually tested this project using the following methods:
 
-    - Passed the code through PEP8 to ensure compliance and confirmed there are no issues.
-    * Tested various invalid inputs, such as entering strings where numbers were expected, providing duplicate inputs, and inputting values that were out of bounds.
-    + Conducted tests in both my local terminal and the Heroku terminal to verify functionality across environments.
+- Passed the code through PEP8 to ensure compliance and confirmed there are no issues.
+* Tested various invalid inputs, such as entering strings where numbers were expected, providing duplicate inputs, and inputting values that were out of bounds.
++ Conducted tests in both my local terminal and the Heroku terminal to verify functionality across environments.
 
-### Validator Testing
 
-    - <a href="https://pep8ci.herokuapp.com/"</a>
